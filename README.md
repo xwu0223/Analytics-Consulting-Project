@@ -51,6 +51,6 @@ Xingkai Wu, Sena Peng, Alison Guo, Zubin Moosa
 |Name     |
 |---------|
 |[Xingkai Wu](https://github.com/xwu0223)|
-|Zubin Moosa(https://www.linkedin.com/in/zubinmoosa/)|
-|Sena Peng(https://www.linkedin.com/in/sena1102/)|
-|Alison Guo(https://www.linkedin.com/in/yao-guo-a62324205/)|
+|[Zubin Moosa](https://www.linkedin.com/in/zubinmoosa/)|
+|[Sena Peng](https://www.linkedin.com/in/sena1102/)|
+|[Alison Guo](https://www.linkedin.com/in/yao-guo-a62324205/)|
