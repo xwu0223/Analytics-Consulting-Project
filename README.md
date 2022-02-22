@@ -50,7 +50,7 @@ Xingkai Wu, Sena Peng, Alison Guo, Zubin Moosa
 
 |Name     |
 |---------|
-|[Xingkai Wu](https://github.com/xwu0223])|
+|[Xingkai Wu](https://github.com/xwu0223)|
 |Zubin Moosa|
 |Sena Peng|
 |Alison Guo|
