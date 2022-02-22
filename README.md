@@ -38,7 +38,7 @@ The purpose of this project is to cluster Interac users into High Credit, High D
 2. Raw Data is being kept at local server, and database connection is kept at scr/db_connection.py, to make a copy of the database/ schema on the local or cloud, please contact [Xingkai Wu](xwu0223@schulich.yorku.ca)
     
 3. Data processing/transformation scripts are being kept at scr/data_transformation.py
-4. Model building process in kept at Model_Building_and_prediction/model_building.py, and visualization is at models.ipynb, prediction is kept at prediction.py
+4. Model building process is kept at Model_Building_and_prediction/model_building.py, and visualization is kept at models.ipynb, prediction is kept at prediction.py
 5. All saved models are kept at models folder
 
 
