@@ -44,10 +44,6 @@ The purpose of this project is to cluster Interac users into High Credit, High D
 
 ## Contributing Members
 
-Xingkai Wu, Sena Peng, Alison Guo, Zubin Moosa
-
-#### Other Members:
-
 |Name     |
 |---------|
 |[Xingkai Wu](https://github.com/xwu0223)|
