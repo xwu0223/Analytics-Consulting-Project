@@ -1,7 +1,7 @@
 # Schulich Analytics Consulting Project
 
-## -- Client: Interac Corp.
-## -- Project: Customer Classification
+## Client: Interac Corp.
+## Project: Customer Classification
 
 
 ## Project Intro/ Objective
