@@ -42,9 +42,6 @@ The purpose of this project is to cluster Interac users into High Credit, High D
 5. All saved models are kept at models folder
 
 
-5. Follow setup [instructions](Link to file)
-
-
 ## Contributing Members
 
 Xingkai Wu, Sena Peng, Alison Guo, Zubin Moosa
