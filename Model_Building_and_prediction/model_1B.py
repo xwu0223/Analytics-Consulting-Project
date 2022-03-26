@@ -14,7 +14,7 @@ from dmba import classificationSummary
 from sklearn.metrics import plot_confusion_matrix
 import warnings
 import pickle
-from scr.data_transformation import data_transform_histgradientboost,data_transform_XGB
+from scr.data_transformation_trans import data_transform_histgradientboost,data_transform_XGB
 from scr.db_connection import mysql_conn
 
 
@@ -28,12 +28,33 @@ data = pd.read_sql("select * from ACP.interac_dashboard",connection)
 # Only year 2019 and 2020 will be considered due to the fact of COVID- 19 and target variable labelling
 data1 = data[data['trans_year'].isin([2019,2020])==True]
 
-############################################################################################################################################
+demo_bank_col = ['user_visible_minority', 'user_smartphone_usage',
+       'user_debit_tap_availability', 'user_age', 'user_income',
+       'user_gender', 'user_region', 'user_education', 'user_lifestage',
+       'user_immigrant_status', 'user_payment_preference',
+       'user_banking_package', 'user_main_bank', 'user_main_debit_card',
+       'user_main_credit_card']
 
+interac_tran_col = ['Liquor/Interac', 'Miscellaneous/Interac', 'grocery/Interac',
+       'home/Interac','personal/Interac','restaurant/Interac', 'travel/Interac']
+
+all_tran_col = ['Liquor/Cash', 'Liquor/Interac', 'Liquor/Other', 'Liquor/credit',
+       'Miscellaneous/Cash', 'Miscellaneous/Interac', 'Miscellaneous/Other',
+       'Miscellaneous/credit', 'grocery/Cash', 'grocery/Interac',
+       'grocery/Other', 'grocery/credit', 'home/Cash', 'home/Interac',
+       'home/Other', 'home/credit', 'personal/Cash', 'personal/Interac',
+       'personal/Other', 'personal/credit', 'restaurant/Cash',
+       'restaurant/Interac', 'restaurant/Other', 'restaurant/credit',
+       'travel/Cash', 'travel/Interac', 'travel/Other', 'travel/credit']
+
+############################################################################################################################################
+############################################## Model 1B(with User Payment Preference)#######################################################
 # HistGradientBoost
+############################################################################################################################################
 X,y = data_transform_histgradientboost(data1)
+X1= X[demo_bank_col]
 categorical_columns_selector = selector(dtype_include=object)
-categorical_columns = categorical_columns_selector(X)
+categorical_columns = categorical_columns_selector(X1)
 categorical_columns
 categorical_preprocessor = OrdinalEncoder(handle_unknown="use_encoded_value",
                                           unknown_value=-1)
@@ -42,7 +63,7 @@ preprocessor = ColumnTransformer([
     ('cat_preprocessor', categorical_preprocessor, categorical_columns)],
     remainder='passthrough', sparse_threshold=0)
 
-X_train, X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,
+X_train, X_test,y_train,y_test = train_test_split(X1,y,test_size=0.2,
                                                     random_state=1234,stratify=y)
 
 hist_model = Pipeline([
@@ -77,17 +98,46 @@ print(
      f"{accuracy:.2f}"
  )
 
-filename = 'histgradient.sav'
+filename = 'histgradient_1B.sav'
 pickle.dump(model_grid_search,open(filename,'wb'))
-
-
 
 ############################################################################################################################################
 
 # XGBoost
+############################################################################################################################################
 X_encoded,y = data_transform_XGB(data1)
+columns = ['user_visible_minority', 'user_smartphone_usage',
+       'user_debit_tap_availability', 'user_age', 'user_income','user_education',
+       'user_immigrant_status','user_gender_female',
+       'user_gender_male', 'user_gender_other', 'user_region_alberta',
+       'user_region_british columbia', 'user_region_east',
+       'user_region_man/sask', 'user_region_north', 'user_region_ontario',
+       'user_region_quebec', 'user_lifestage_couple no kids',
+       'user_lifestage_couple with older kids',
+       'user_lifestage_couple with younger kids',
+       'user_lifestage_empty nesters', 'user_lifestage_single no kids',
+       'user_lifestage_single with kids', 'user_payment_preference_cash',
+       'user_payment_preference_credit', 'user_payment_preference_debit',
+       'user_payment_preference_mixed','user_banking_package_dkna',
+       'user_banking_package_limited', 'user_banking_package_unlimited',
+       'user_main_bank_bmo', 'user_main_bank_cibc',
+       'user_main_bank_desjardins', 'user_main_bank_other',
+       'user_main_bank_pc/simplii', 'user_main_bank_rbc',
+       'user_main_bank_scotiabank', 'user_main_bank_tangerine',
+       'user_main_bank_td', 'user_main_debit_card_bmo',
+       'user_main_debit_card_cibc', 'user_main_debit_card_desjardins',
+       'user_main_debit_card_other', 'user_main_debit_card_pc/simplii',
+       'user_main_debit_card_rbc', 'user_main_debit_card_scotiabank',
+       'user_main_debit_card_tangerine', 'user_main_debit_card_td',
+       'user_main_credit_card_amex credit',
+       'user_main_credit_card_mastercard credit',
+       'user_main_credit_card_no credit card',
+       'user_main_credit_card_other credit',
+       'user_main_credit_card_visa credit']
 
-X_train,X_test,y_train,y_test = train_test_split(X_encoded,y,test_size=0.2,random_state = 42,stratify=y)
+X1= X_encoded[columns]
+
+X_train,X_test,y_train,y_test = train_test_split(X1,y,test_size=0.2,random_state = 1234,stratify=y)
 
 warnings.filterwarnings("ignore")
 clf_xgb = xgb.XGBClassifier(objective = 'multi:softprob', use_label_encoder=False, missing=0, seed=42)
@@ -133,17 +183,48 @@ plot_confusion_matrix(model_grid_search,
                       y_test,
                       values_format='d')
 
-filename = 'xgb1.sav'
+filename = 'xgb_1B.sav'
 pickle.dump(model_grid_search,open(filename,'wb'))
 
 ############################################################################################################################################
 
 # RFECV
 X_encoded,y = data_transform_XGB(data1)
+columns = ['user_visible_minority', 'user_smartphone_usage',
+       'user_debit_tap_availability', 'user_age', 'user_income','user_education',
+       'user_immigrant_status','user_gender_female',
+       'user_gender_male', 'user_gender_other', 'user_region_alberta',
+       'user_region_british columbia', 'user_region_east',
+       'user_region_man/sask', 'user_region_north', 'user_region_ontario',
+       'user_region_quebec', 'user_lifestage_couple no kids',
+       'user_lifestage_couple with older kids',
+       'user_lifestage_couple with younger kids',
+       'user_lifestage_empty nesters', 'user_lifestage_single no kids',
+       'user_lifestage_single with kids', 'user_payment_preference_cash',
+       'user_payment_preference_credit', 'user_payment_preference_debit',
+       'user_payment_preference_mixed','user_banking_package_dkna',
+       'user_banking_package_limited', 'user_banking_package_unlimited',
+       'user_main_bank_bmo', 'user_main_bank_cibc',
+       'user_main_bank_desjardins', 'user_main_bank_other',
+       'user_main_bank_pc/simplii', 'user_main_bank_rbc',
+       'user_main_bank_scotiabank', 'user_main_bank_tangerine',
+       'user_main_bank_td', 'user_main_debit_card_bmo',
+       'user_main_debit_card_cibc', 'user_main_debit_card_desjardins',
+       'user_main_debit_card_other', 'user_main_debit_card_pc/simplii',
+       'user_main_debit_card_rbc', 'user_main_debit_card_scotiabank',
+       'user_main_debit_card_tangerine', 'user_main_debit_card_td',
+       'user_main_credit_card_amex credit',
+       'user_main_credit_card_mastercard credit',
+       'user_main_credit_card_no credit card',
+       'user_main_credit_card_other credit',
+       'user_main_credit_card_visa credit']
 
-X_train,X_test,y_train,y_test = train_test_split(X_encoded,y,test_size=0.2,random_state = 42,stratify=y)
+X1= X_encoded[columns]
+X_train,X_test,y_train,y_test = train_test_split(X1,y,test_size=0.2,random_state = 42,stratify=y)
 #choose estimator/model type for Recursive feature elimination and cross valiation
-estimator = xgb.XGBClassifier(gamma =0.25, learning_rate= 0.1, max_depth= 4, reg_lambda= 100, eval_metric='mlogloss')
+estimator = xgb.XGBClassifier(gamma =0, learning_rate= 0.05, max_depth= 5, reg_lambda= 100, eval_metric='mlogloss',use_label_encoder =False)
+
+print("training RFECV")
 selector = RFECV(estimator, step=1, min_features_to_select=1,scoring="accuracy", cv=10)
 
 #fit the model, get a rank of the variables, and a matrix of the selected X variables
@@ -176,5 +257,5 @@ print(pd.DataFrame(
 print(classificationSummary(y_train, selector.predict(X_train)))
 print(classificationSummary(y_test, selector.predict(X_test)))
 
-filename = 'selector.sav'
+filename = 'selector_1B.sav'
 pickle.dump(selector,open(filename,'wb'))
