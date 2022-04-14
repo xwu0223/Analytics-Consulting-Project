@@ -1,16 +1,11 @@
 # Schulich Analytics Consulting Project
 
-## Client: Interac Corp.
+## Client: *Confidential*.
 ## Project: Customer Classification
 
 
 ## Project Intro/ Objective
 The purpose of this project is to cluster Interac users into High Credit, High Debit and High Cash users, to better target potential users in marketing campaign 
-
-### Partner
-* Interac Corp. 
-* https://www.interac.ca/en/
-* Partner contact: Palash Thakur, Eric Chue, Hardayal Kalla
 
 ### Methods Used
 * Inferential Statistics
