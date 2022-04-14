@@ -1,7 +1,7 @@
 def mysql_conn(host, database,user):
     import mysql.connector
     from mysql.connector import Error
-    pw = 'Jose@1992'
+    pw = '******'
     try:
         connection = mysql.connector.connect(host=host,
                                             database=database,
